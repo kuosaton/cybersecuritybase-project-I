@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US">
+   <head>
+      <meta charset="utf-8" />
+      <title>Index - Polls app</title>
+   </head>
+   <body>
+      <h1>Polls app</h1>
+
+      {% if user.username %}
+      <table>
+         <tr>
+            <th style="text-align: left">Logged in as:</th>
+            <td>{{user.username}}</td>
+         </tr>
+      </table>
+
+      <form action="logout/" method="POST">
+         {% csrf_token %}
+         <input type="submit" value="Logout" />
+      </form>
+
+      {% else %}
+      <b>Not logged in.</b>
+
+      <a href="/login/" class="button">Login</a>
+      {% endif %}
+
+      <h2>Questions</h2>
+
+      {% if questions %}
+      <ul>
+         {% for question in questions %}
+         <li>
+            <a href="{% url 'polls:detail' question.id %}"
+               >{{ question.question_text }}</a
+            >
+         </li>
+         {% endfor %}
+      </ul>
+      {% else %}
+      <p>No polls are available.</p>
+      {% endif %}
+
+      <h2>Add new question</h2>
+
+      <form action="{% url 'polls:add' %}" method="POST">
+         {% csrf_token %}
+
+         <label for="question_text">Question:</label><br />
+         <input type="text" name="question_text" required /><br /><br />
+
+         <label>Choices:</label><br />
+         <input
+            type="text"
+            name="choice1_text"
+            placeholder="Choice 1"
+            required
+         /><br />
+         <input
+            type="text"
+            name="choice2_text"
+            placeholder="Choice 2"
+            required
+         /><br />
+         <input
+            type="text"
+            name="choice3_text"
+            placeholder="Choice 3"
+            required
+         /><br /><br />
+
+         <input type="submit" value="Submit" />
+      </form>
+   </body>
+</html>
