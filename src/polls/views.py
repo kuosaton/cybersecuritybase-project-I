@@ -8,6 +8,8 @@ from django.utils import timezone
 from .models import Choice, Question
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 
 def indexView(request):
@@ -16,6 +18,16 @@ def indexView(request):
     )[:5]
     context = {"questions": questions}
     return render(request, "polls/index.html", context)
+
+
+"""
+The 'registerView()' function suffers from 1 flaw
+
+FLAW #1: A07:2021-Identification and Authentication Failures
+    - Users are able to create an user with a weak or common password
+    - The flaw can be fixed by uncommenting 'validate_password()'
+    - This adds weak password checks for registration
+"""
 
 
 def registerView(request):
@@ -42,21 +54,47 @@ def registerView(request):
                 "polls/register.html",
                 {"error_message": "Username already exists"},
             )
+        try:
+            # Uncomment 'validate_password()' to add weak password checks
+            # validate_password(password=password)
+            User.objects.create_user(username=username, password=password)
 
-        User.objects.create_user(username=username, password=password)
-        return redirect("polls:index")
+            return render(
+                request,
+                "polls/register.html",
+                {"success_message": f"Account {username} created successfully!"},
+            )
+
+        except ValidationError as e:
+            return render(
+                request,
+                "polls/register.html",
+                {"error_message": e},
+            )
 
 
-# Uncomment to correctly prevent users from accessing login only page
-# This fixes A01:2021-Broken Access Control for addView
-# @login_required(redirect_field_name="")
-@csrf_exempt  # Remove this decorator to restore CSRF protection
+"""
+The 'deleteView()' function suffers from 2 flaws
+
+FLAW #1: A01:2021-Broken Access Control
+    - Users are able to delete other users' polls; they don't even have to be logged in
+    - This is not intended; users should be logged in and only be able to delete their own polls
+    - The flaw can be fixed by:
+        - 1. Uncommenting '@login_required'
+        - 2. removing the quotation commenting around the 'question.creator != request.user check'
+FLAW #2: CSRF vulnerability
+    - The function is missing CSRF protection
+    - The flaw can be fixed by removing the '@csrf_exempt' decorator
+"""
+
+
+# @login_required(redirect_field_name="") # Uncomment this decotator
+@csrf_exempt  # Remove this decorator
 def deleteView(request, pk):
     question = Question.objects.get(pk=pk)
 
+    # Remove quotation commenting around this if-statement
     """
-    # Remove quotation comment marks to prevent users from deleting other users' questions
-    # This fixes A01:2021
     if question.creator != request.user:
         return redirect("/")
     """
@@ -64,10 +102,21 @@ def deleteView(request, pk):
     return redirect("/")
 
 
-# Uncomment to correctly prevent users from accessing login only page
-# This fixes A01:2021-Broken Access Control for addView
-# @login_required(redirect_field_name="")
-@csrf_exempt  # Remove this decorator to restore CSRF protection
+"""
+The 'detailview()' function suffers from 2 flaws
+
+FLAW #1: A01:2021-Broken Access Control
+    - Users are able to view poll details by force browsing to their URLs
+    - This functionality is meant to be login only
+    - The flaw can be fixed by uncommenting '@login_required'
+FLAW #2: CSRF vulnerability
+    - The function is missing CSRF protection
+    - The flaw can be fixed by removing the '@csrf_exempt' decorator
+"""
+
+
+# @login_required(redirect_field_name="") # Uncomment this decorator
+@csrf_exempt  # Remove this decorator
 def addView(request):
     if request.method == "POST":
         question_text = request.POST.get("question_text")
@@ -90,10 +139,21 @@ def addView(request):
         return redirect("polls:index")
 
 
-# Uncomment to correctly prevent users from accessing login only page
-# This fixes A01:2021-Broken Access Control for addView
-# @login_required
-@csrf_exempt  # Remove this decorator to restore CSRF protection
+"""
+The 'detailview()' function suffers from 2 flaws
+
+FLAW #1: A01:2021-Broken Access Control
+    - Users are able to view poll details by force browsing to their URLs
+    - This functionality is meant to be login only
+    - The flaw can be fixed by uncommenting '@login_required'
+FLAW #2: CSRF vulnerability
+    - The function is missing CSRF protection
+    - The flaw can be fixed by removing the '@csrf_exempt' decorator
+"""
+
+
+# @login_required # Uncomment this decorator
+@csrf_exempt  # Remove this decorator
 def detailView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
     question = get_object_or_404(queryset, pk=pk)
@@ -107,10 +167,21 @@ class ResultsView(generic.DetailView):
     template_name = "polls/results.html"
 
 
-# Uncomment to correctly prevent users from accessing login only page
-# This fixes A01:2021-Broken Access Control for addView
-# @login_required(redirect_field_name="")
-@csrf_exempt  # Remove this decorator to restore CSRF protection
+"""
+The 'voteView()' function suffers from 2 flaws
+
+FLAW #1: A01:2021-Broken Access Control
+    - Users are able to vote on polls by force browsing to their URLs
+    - This functionality is meant to be login only
+    - The flaw can be fixed by uncommenting '@login_required'
+FLAW #2: CSRF vulnerability
+    - The function is missing CSRF protection
+    - The flaw can be fixed by removing the '@csrf_exempt' decorator
+"""
+
+
+# @login_required(redirect_field_name="") # Uncomment this decorator
+@csrf_exempt  # Remove this decorator
 def voteView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
 

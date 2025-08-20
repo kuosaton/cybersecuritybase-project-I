@@ -4,10 +4,12 @@
     <meta charset="utf-8" />
     <title>Index - Polls app</title>
   </head>
-  
+
   <body>
     <h1>Polls app</h1>
     <hr />
+
+
 
     <section>
       {% if user.username %}
@@ -72,18 +74,21 @@
             placeholder="Choice 1"
             required
           /><br />
+
           <input
             type="text"
             name="choice2_text"
             placeholder="Choice 2"
             required
           /><br />
+
           <input
             type="text"
             name="choice3_text"
             placeholder="Choice 3"
             required
-          /><br /><br />
+          /><br />
+          <br />
           <input type="submit" value="Submit" />
         </fieldset>
       </form>

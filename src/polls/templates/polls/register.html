@@ -11,8 +11,10 @@
     <h2>Register</h2>
 
     {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-    {% endif %}
+    <p><strong>Error: {{ error_message }}</strong></p>
+    {% endif %} {% if success_message %}
+    <p><strong>{{ success_message }}</strong></p>
+    {% else %}
 
     <form method="post">
       {% csrf_token %}
@@ -27,7 +29,7 @@
 
       <input type="submit" value="Submit" />
     </form>
-
+    {% endif %}
     <footer>
       <br />
       <a href="{% url 'polls:index' %}">Return to home page</a>
