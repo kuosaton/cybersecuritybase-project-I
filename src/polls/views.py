@@ -31,7 +31,7 @@ FLAW #1: A01:2021-Broken Access Control
     - This is not intended; users should be logged in and only be able to delete their own polls
     - The flaw can be fixed by:
         - 1. Uncommenting '@login_required'
-        - 2. Removing the quotation commenting around the 'question.creator != request.user check'
+        - 2. Removing the quotation commenting around the 'question.creator != request.user' check
 """
 
 
