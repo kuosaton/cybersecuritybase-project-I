@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="en-US">
-   <head>
-      <meta charset="utf-8" />
-      <title>Question details - Polls app</title>
-   </head>
-   <body>
-      <form action="{% url 'polls:vote' question.id %}" method="POST">
-         {% csrf_token %}
-         <fieldset>
-            <legend><h1>{{ question.question_text }}</h1></legend>
-            {% if error_message %}
-            <p><strong>{{ error_message }}</strong></p>
-            {% endif %}
+  <head>
+    <meta charset="utf-8" />
+    <title>Poll details - Polls app</title>
+  </head>
+  <body>
+    <form action="{% url 'polls:vote' question.id %}" method="POST">
+      {% csrf_token %}
+      <legend><h1>Poll: "{{ question.question_text }}"</h1></legend>
+      <p>
+        Submitted by <b>{{ question.creator }}</b> on {{ question.pub_date }}
+      </p>
+      {% if error_message %}
+      <p><strong>{{ error_message }}</strong></p>
+      {% endif %}
+      <fieldset>
+        <legend>Choose an answer:</legend>
+        {% for choice in question.choice_set.all %}
+        <input
+          type="radio"
+          name="choice"
+          id="choice{{ forloop.counter }}"
+          value="{{ choice.id }}"
+        />
+        <label for="choice{{ forloop.counter }}"
+          >{{ choice.choice_text }} </label
+        ><br />
+        {% endfor %}
+        <input type="submit" value="Vote" />
+      </fieldset>
+    </form>
 
-            <h2>Choices</h2>
-            <label>Choose one:</label><br />
-
-            {% for choice in question.choice_set.all %}
-            <input
-               type="radio"
-               name="choice"
-               id="choice{{ forloop.counter }}"
-               value="{{ choice.id }}"
-            />
-            <label for="choice{{ forloop.counter }}"
-               >{{ choice.choice_text }} </label
-            ><br />
-            {% endfor %}
-         </fieldset>
-         <input type="submit" value="Vote" />
-      </form>
-   </body>
+    <hr />
+    <footer>
+      <a href="{% url 'polls:index' %}">Return to home page</a>
+    </footer>
+  </body>
 </html>

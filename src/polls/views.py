@@ -46,7 +46,7 @@ def registerView(request):
         return redirect("polls:index")
 
 
-@login_required(redirect_field_name="")
+# @login_required(redirect_field_name="")
 def addView(request):
     if request.method == "POST":
         question_text = request.POST.get("question_text")
@@ -69,9 +69,10 @@ def addView(request):
         return redirect("polls:index")
 
 
-@login_required
-def detailView(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+# @login_required
+def detailView(request, pk):
+    queryset = Question.objects.filter(pub_date__lte=timezone.now())
+    question = get_object_or_404(queryset, pk=pk)
     context = {"question": question}
 
     return render(request, "polls/detail.html", context)
@@ -82,13 +83,11 @@ class ResultsView(generic.DetailView):
     template_name = "polls/results.html"
 
 
-def vote(request, question_id):
+# @login_required(redirect_field_name="")
+def vote(request, pk):
+    queryset = Question.objects.filter(pub_date__lte=timezone.now())
 
-    # Only allow voting for logged in users
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect("/login/")
-
-    question = get_object_or_404(Question, pk=question_id)
+    question = get_object_or_404(queryset, pk=pk)
 
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])

@@ -1,8 +1,22 @@
-<h2>Login</h2>
-<form method="post">
-   {% csrf_token %} {{ form.as_p }}
-   <button type="submit">Login</button>
-</form>
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Login - Polls app</title>
+  </head>
+  <body>
+    <h2>Login</h2>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
 
-<b>No account?</b>
-<a href="/register/">Register</a>
+    <b>No account?</b>
+    <a href="/register/">Register</a>
+
+    <hr />
+    <footer>
+      <a href="{% url 'polls:index' %}">Return to home page</a>
+    </footer>
+  </body>
+</html>
