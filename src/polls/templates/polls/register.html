@@ -5,6 +5,9 @@
     <title>Register - Polls app</title>
   </head>
   <body>
+    <h1>Polls app</h1>
+    <hr />
+
     <h2>Register</h2>
 
     {% if error_message %}
@@ -26,8 +29,8 @@
       <input type="submit" value="Submit" />
     </form>
 
-    <hr />
     <footer>
+      <br />
       <a href="{% url 'polls:index' %}">Return to home page</a>
     </footer>
   </body>

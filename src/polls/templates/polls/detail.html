@@ -5,15 +5,17 @@
     <title>Poll details - Polls app</title>
   </head>
   <body>
+    <h1>Polls app</h1>
+    <hr />
+
+    <h2>Poll: {{ question.question_text }}</h2>
+    <p>Submitted by <b>{{ question.creator }}</b> on {{ question.pub_date }}</p>
+
     <form action="{% url 'polls:vote' question.id %}" method="POST">
-      {% csrf_token %}
-      <legend><h1>Poll: "{{ question.question_text }}"</h1></legend>
-      <p>
-        Submitted by <b>{{ question.creator }}</b> on {{ question.pub_date }}
-      </p>
-      {% if error_message %}
+      {% csrf_token %} {% if error_message %}
       <p><strong>{{ error_message }}</strong></p>
       {% endif %}
+
       <fieldset>
         <legend>Choose an answer:</legend>
         {% for choice in question.choice_set.all %}
@@ -31,8 +33,8 @@
       </fieldset>
     </form>
 
-    <hr />
     <footer>
+      <br />
       <a href="{% url 'polls:index' %}">Return to home page</a>
     </footer>
   </body>

@@ -5,7 +5,10 @@
     <title>Poll results - Polls app</title>
   </head>
   <body>
-    <h1>Poll results: "{{ question.question_text }}"</h1>
+    <h1>Polls app</h1>
+    <hr />
+
+    <h2>Results for poll: {{ question.question_text }}</h2>
 
     <ul>
       {% for choice in question.choice_set.all %}
@@ -18,8 +21,8 @@
 
     <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 
-    <hr />
     <footer>
+      <br />
       <a href="{% url 'polls:index' %}">Return to home page</a>
     </footer>
   </body>
