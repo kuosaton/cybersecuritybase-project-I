@@ -24,9 +24,14 @@ SECRET_KEY = "django-insecure-*2djmx7f@*(3ayf1mirb4&u0org&9n87&_g0kek$!_5o-%9h&8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+"""
+# Remove quotation comment marks and remove above 'DEBUG = TRUE' to disallow directory listing and detailed error messages
+# This fixes A05_2021-Security_Misconfiguration
+# When DEBUG = TRUE, navigate to a nonexistent url such as /images to get a 'page not found' page that lists all directories
 
-ALLOWED_HOSTS = []
-
+DEBUG = False
+ALLOWED_HOSTS = ["127.0.0.1"]
+"""
 
 # Application definition
 
@@ -87,6 +92,9 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 """
+# Remove quotation comment marks to add missing weak password checks
+# This fixes A07:2021-Identification and Authentication Failures 
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

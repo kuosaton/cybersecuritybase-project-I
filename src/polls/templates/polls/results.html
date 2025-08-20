@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Poll results - Polls app</title>
   </head>
+
   <body>
     <h1>Polls app</h1>
     <hr />
@@ -13,7 +14,7 @@
     <ul>
       {% for choice in question.choice_set.all %}
       <li>
-        {{ choice.choice_text }} -
+        {{ choice.choice_text }} --
         <b>{{ choice.votes }}</b> vote{{choice.votes|pluralize }}
       </li>
       {% endfor %}

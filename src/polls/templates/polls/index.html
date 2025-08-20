@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Index - Polls app</title>
   </head>
+  
   <body>
     <h1>Polls app</h1>
     <hr />
@@ -16,15 +17,12 @@
           <td><b>{{user.username}}</b></td>
         </tr>
       </table>
-
       <form action="logout/" method="POST">
         {% csrf_token %}
         <input type="submit" value="Logout" />
       </form>
-
       {% else %}
       <b>Not logged in.</b>
-
       <br />
       <a href="/login/" class="button">Login</a>
       {% endif %}
@@ -41,8 +39,14 @@
             <i>{{ question.question_text }}</i><br />
             {% if user.username %}
             <a href="{% url 'polls:detail' question.id %}">View poll</a>
+            {% if question.creator == user.username %}
+            <form action="{% url 'polls:delete' question.id %}" method="POST">
+              {% csrf_token %}
+              <input type="submit" value="Delete question" />
+            </form>
+            {% endif %}
             {% else %}
-            <a href="login/">Log in to view poll</a>
+            <a href="login/">Login to view poll</a>
             {% endif %}
           </p>
         </li>
@@ -55,16 +59,12 @@
 
     <section>
       <h2>Create a poll</h2>
-
       {% if user.username %}
-
       <form action="{% url 'polls:add' %}" method="POST">
         <fieldset>
           {% csrf_token %}
-
           <label for="question_text">Question:</label><br />
           <input type="text" name="question_text" required /><br /><br />
-
           <label>Choices:</label><br />
           <input
             type="text"
@@ -84,14 +84,11 @@
             placeholder="Choice 3"
             required
           /><br /><br />
-
           <input type="submit" value="Submit" />
         </fieldset>
       </form>
-
       {% else %}
-      <a href="login/">Log in to create polls</a>
-
+      <a href="login/">Login to create polls</a>
       {% endif %}
     </section>
   </body>

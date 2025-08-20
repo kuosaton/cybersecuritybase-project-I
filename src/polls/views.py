@@ -7,6 +7,7 @@ from django.views import generic
 from django.utils import timezone
 from .models import Choice, Question
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 
 def indexView(request):
@@ -46,7 +47,27 @@ def registerView(request):
         return redirect("polls:index")
 
 
+# Uncomment to correctly prevent users from accessing login only page
+# This fixes A01:2021-Broken Access Control for addView
 # @login_required(redirect_field_name="")
+@csrf_exempt  # Remove this decorator to restore CSRF protection
+def deleteView(request, pk):
+    question = Question.objects.get(pk=pk)
+
+    """
+    # Remove quotation comment marks to prevent users from deleting other users' questions
+    # This fixes A01:2021
+    if question.creator != request.user:
+        return redirect("/")
+    """
+    question.delete()
+    return redirect("/")
+
+
+# Uncomment to correctly prevent users from accessing login only page
+# This fixes A01:2021-Broken Access Control for addView
+# @login_required(redirect_field_name="")
+@csrf_exempt  # Remove this decorator to restore CSRF protection
 def addView(request):
     if request.method == "POST":
         question_text = request.POST.get("question_text")
@@ -69,7 +90,10 @@ def addView(request):
         return redirect("polls:index")
 
 
+# Uncomment to correctly prevent users from accessing login only page
+# This fixes A01:2021-Broken Access Control for addView
 # @login_required
+@csrf_exempt  # Remove this decorator to restore CSRF protection
 def detailView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
     question = get_object_or_404(queryset, pk=pk)
@@ -83,8 +107,11 @@ class ResultsView(generic.DetailView):
     template_name = "polls/results.html"
 
 
+# Uncomment to correctly prevent users from accessing login only page
+# This fixes A01:2021-Broken Access Control for addView
 # @login_required(redirect_field_name="")
-def vote(request, pk):
+@csrf_exempt  # Remove this decorator to restore CSRF protection
+def voteView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
 
     question = get_object_or_404(queryset, pk=pk)

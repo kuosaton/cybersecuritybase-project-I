@@ -4,11 +4,13 @@
     <meta charset="utf-8" />
     <title>Login - Polls app</title>
   </head>
+
   <body>
     <h1>Polls app</h1>
     <hr />
 
     <h2>Login</h2>
+
     <form method="post">
       {% csrf_token %} {{ form.as_p }}
       <button type="submit">Login</button>
