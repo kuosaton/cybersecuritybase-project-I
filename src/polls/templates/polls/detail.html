@@ -16,6 +16,7 @@
       {% csrf_token %}
       <input type="submit" value="Delete question" />
     </form>
+    <br />
 
     <form action="{% url 'polls:vote' question.id %}" method="POST">
       {% csrf_token %} {% if error_message %}

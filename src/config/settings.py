@@ -55,6 +55,56 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+"""
+FLAW: A09:2021-Security Logging and Monitoring Failures
+- The app is missing security logging and monitoring
+- This can be fixed by removing the quotation commenting around the 'LOGGING' dictionary
+- Once active, the logging can be tested by:
+    1. Triggering disallowed host event warning using e.g. "curl -H "Host: fake.com" http://localhost:8000/"
+        - This produces a django.security.DisallowedHost error in the console and security.log file stored in src/
+    2. Navigating to http://127.0.0.1:8000/login/, deleting the CSRF in browser dev tools, and submitting the login form
+        - This produces a django.security.csrf warning in the console and security.log file stored in src/
+"""
+
+# Fix: remove this quotation commenting around the 'LOGGING' dictionary
+"""
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {name}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "security_file": {
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "filename": "security.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django.security": {
+            "handlers": ["security_file", "console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.security.DisallowedHost": {
+            "handlers": ["security_file", "console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
+"""
+
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
