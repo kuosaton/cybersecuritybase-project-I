@@ -56,17 +56,17 @@ MIDDLEWARE = [
 ]
 
 """
-FLAW: A09:2021-Security Logging and Monitoring Failures
-- The app is missing security logging and monitoring
-- This can be fixed by removing the quotation commenting around the 'LOGGING' dictionary
-- Once active, the logging can be tested by:
-    1. Triggering disallowed host event warning using e.g. "curl -H "Host: fake.com" http://localhost:8000/"
-        - This produces a django.security.DisallowedHost error in the console and security.log file stored in src/
-    2. Navigating to http://127.0.0.1:8000/login/, deleting the CSRF in browser dev tools, and submitting the login form
-        - This produces a django.security.csrf warning in the console and security.log file stored in src/
+// FLAW: A09:2021 "Security Logging and Monitoring Failures"
+//  - The app is missing security logging and monitoring
+//      - This can be fixed by removing the quotation commenting around the 'LOGGING' dictionary
+//  - Once active, the logging can be tested by:
+//      1. Triggering disallowed host event warning using e.g. "curl -H "Host: fake.com" http://localhost:8000/"
+//          - This produces a django.security.DisallowedHost error in the console and security.log file stored in src/
+//      2. Navigating to http://127.0.0.1:8000/login/, deleting the CSRF in browser dev tools, and submitting the login form
+//          - This produces a django.security.csrf warning in the console and security.log file stored in src/
 """
 
-# Fix: remove this quotation commenting around the 'LOGGING' dictionary
+# // A09:2021 FLAW FIX: remove this quotation commenting around the 'LOGGING' dictionary //
 """
 LOGGING = {
     "version": 1,
@@ -137,6 +137,34 @@ DATABASES = {
     }
 }
 
+# Password hashing
+# https://docs.djangoproject.com/en/5.2/ref/settings/#password-hashers
+
+"""
+// FLAW: A02:2021 - "Cryptographic Failures"
+// MD5, a deprecated hash function, is being used for password hashing
+// FIX: Remove MD5 from the password_hashers list and uncomment the more robust hashers below
+"""
+
+
+# // A02:2021 FLAW FIX step 1/2: //
+# // Remove this PASSWORD_HASHERS list using a deprecated hasher //
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.MD5PasswordHasher",
+]
+
+# // A02:2021 FLAW FIX step 2/2: //
+# // Remove the quotation commenting around this PASSWORD_HASHERS list //
+# // It uses more robust hashers such as PBKDF2, Argon2, BCrypt, and Scrypt //
+"""
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

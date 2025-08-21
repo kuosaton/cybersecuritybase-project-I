@@ -168,7 +168,7 @@ def registerView(request):
             return render(
                 request,
                 "polls/register.html",
-                {"success_message": f"Account {username} created successfully!"},
+                {"success_message": f"Account '{username}' created successfully!"},
             )
 
         except ValidationError as e:
