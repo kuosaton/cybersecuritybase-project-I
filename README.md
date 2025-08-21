@@ -1,6 +1,8 @@
 # cybersecuritybase-project-I
 
-Submission for [Cyber Security Base project I](https://cybersecuritybase.mooc.fi/module-3.1)
+Submission for Cyber Security Base project I: https://cybersecuritybase.mooc.fi/module-3.1
+
+Starter website created following Django's "Writing your first Django app" tutorial: https://docs.djangoproject.com/en/5.2/intro/
 
 ## Installation instructions
 
