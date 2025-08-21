@@ -19,7 +19,7 @@ kuosaton:~/csb/cybersecuritybase-project-I/src$ python manage.py
 ```shell
 kuosaton:~/csb/cybersecuritybase-project-I/src$ python manage.py runserver
 ```
-6. After starting the server, navigate to its address in your which by default is `http://127.0.0.1:8000/`. Navigate to this address in your browser
+6. After starting the server, navigate to its address in your browser (`http://127.0.0.1:8000/` by default).
 ```shell
 Starting development server at http://127.0.0.1:8000/
 ```
