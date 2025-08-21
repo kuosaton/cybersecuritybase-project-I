@@ -24,22 +24,20 @@ def indexView(request):
 
 
 """
-The 'deleteView()' function suffers from 1 flaw
-
-FLAW #1: A01:2021-Broken Access Control
-    - Users are able to delete other users' polls; they don't even have to be logged in
-    - This is not intended; users should be logged in and only be able to delete their own polls
-    - The flaw can be fixed by:
-        - 1. Uncommenting '@login_required'
-        - 2. Removing the quotation commenting around the 'question.creator != request.user' check
+// deleteView() suffers from the A01:2021 "Broken Access Control" flaw
+//  - Users are able to delete other users' polls; they don't even have to be logged in
+//      - This is not intended; users should be logged in & only be able to delete their own polls
+//      - This can be fixed by:
+//          - 1. Uncommenting '@login_required'
+//          - 2. Removing the quotation commenting around the 'question.creator != request.user' check
 """
 
-
-# @login_required(redirect_field_name="") # Fix step 1: Uncomment this decotator
+#   // A01:2021 FLAW FIX step 1/2: Uncomment the '@login_required' decotator below //
+# @login_required(redirect_field_name="")
 def deleteView(request, pk):
     question = Question.objects.get(pk=pk)
 
-    # Fix step 2: Remove quotation commenting around this if-statement
+    #   // A01:2021 FLAW FIX step 2/2: Remove quotation commenting around the if-statement below //
     """
     if question.creator != request.user:
         return render(
@@ -87,16 +85,14 @@ def detailView(request, pk):
 
 
 """
-The 'voteView()' function suffers from 1 flaw
-
-FLAW: CSRF vulnerability
-    - The function is missing CSRF protection
-    - The flaw can be fixed by removing the '@csrf_exempt' decorator
+// voteView() suffers from the CSRF vulnerability flaw
+//  - This can be fixed by removing the '@csrf_exempt' decorator
+//  - This restores Django's CSRF protection
 """
 
-
+#   // CSRF FLAW FIX: Remove the '@csrf_exempt' decorator below //
+@csrf_exempt
 @login_required(redirect_field_name="")
-# @csrf_exempt  # Fix: Remove this decorator
 def voteView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
 
@@ -105,7 +101,6 @@ def voteView(request, pk):
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form
         return render(
             request,
             "polls/detail.html",
@@ -133,12 +128,11 @@ def resultsView(request, pk):
 
 
 """
-The 'registerView()' function suffers from 1 flaw
-
-FLAW: A07:2021-Identification and Authentication Failures
-    - Users are able to create an user with a weak or common password
-    - The flaw can be fixed by uncommenting 'validate_password()'
-    - This adds weak password checks for registration
+// registerView() suffers from the A07:2021 "Identification and Authentication Failures" flaw
+//  - Users are able to create an user with a weak or common password
+//  - This can be fixed by uncommenting the 'validate_password()' function call
+//      - This adds weak password checks
+//          - The checks are defined in config/settings.py with the 'AUTH_PASSWORD_VALIDATORS' dict
 """
 
 
@@ -167,7 +161,7 @@ def registerView(request):
                 {"error_message": "Username already exists"},
             )
         try:
-            # Fix: Uncomment 'validate_password()' to add weak password checks
+            #   // A07:2021 FLAW FIX: Uncomment the function call below //
             # validate_password(password=password)
             User.objects.create_user(username=username, password=password)
 
