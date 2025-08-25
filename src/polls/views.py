@@ -116,15 +116,6 @@ def resultsView(request, pk):
     return render(request, "polls/results.html", context)
 
 
-"""
-// registerView() suffers from the A07:2021 "Identification and Authentication Failures" flaw
-//  - Users are able to create an user with a weak or common password
-//  - This can be fixed by uncommenting the 'validate_password()' function call
-//      - This adds weak password checks
-//          - The checks are defined in config/settings.py with the 'AUTH_PASSWORD_VALIDATORS' dict
-"""
-
-
 # ! Flaw 3: A07:2021 - Identification and Authentication Failures
 # ! Problem: Users are allowed to register using a weak/common password
 # ! Fix: Uncomment the validate_password() function call
