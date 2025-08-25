@@ -50,16 +50,15 @@ MIDDLEWARE = [
 
 
 # ! Flaw 4: A09:2021 - Security Logging and Monitoring Failures
-# ! Problem: The app is missing security logging and monitoring
-# ! Fix: Remove the quote comments around the 'LOGGING' dictionary
+# ! Problem: Security event loggers have been silenced
+# ! Fix: Switch "handlers" dict value to list ["security_file", "console"] instead of list ["null"]
 # ! Notes:
 # !     - Once active, the logging can be tested by:
-# !         1. Triggering disallowed host event warning using e.g. "curl -H "Host: fake.com" http://localhost:8000/"
+# !         1. Triggering disallowed host event warning by running e.g. "curl -H "Host: fake.com" http://localhost:8000/" on a 2nd shell while server is running
 # !             - This produces a django.security.DisallowedHost error
 # !         2. Navigating to /login/, deleting the CSRF in browser dev tools, and submitting the login form
 # !             - This produces a django.security.csrf warning
 # !     - Security event logs are outputted in the server console and the security.log file
-"""
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -81,21 +80,19 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
+        "null": {
+            "class": "logging.NullHandler",
+        },
     },
     "loggers": {
         "django.security": {
-            "handlers": ["security_file", "console"],
-            "level": "WARNING",
-            "propagate": False,
-        },
-        "django.security.DisallowedHost": {
-            "handlers": ["security_file", "console"],
-            "level": "ERROR",
+            "handlers": ["null"],  # ! Remove this to fix flaw A09:2021, step 1/2
+            # "handlers": ["security_file", "console"],  # ! Uncomment this to fix flaw A09:2021, step 2/2
             "propagate": False,
         },
     },
 }
-"""
+
 
 ROOT_URLCONF = "config.urls"
 
