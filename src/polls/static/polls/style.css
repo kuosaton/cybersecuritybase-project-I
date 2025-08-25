@@ -1,7 +1,13 @@
 li a {
-   color: green;
+  color: green;
 }
 
 body {
-   padding: 0.5em;
+  padding: 0.5em;
+}
+
+html {
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  background-color: #f7fafc;
+  color: #333;
 }

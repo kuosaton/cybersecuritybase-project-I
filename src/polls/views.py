@@ -3,7 +3,6 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.views import generic
 from django.utils import timezone
 from .models import Choice, Question
 from django.contrib.auth.models import User
@@ -23,21 +22,13 @@ def indexView(request):
     return render(request, "polls/index.html", context)
 
 
-"""
-// deleteView() suffers from the A01:2021 "Broken Access Control" flaw
-//  - Users are able to delete other users' polls; they don't even have to be logged in
-//      - This is not intended; users should be logged in & only be able to delete their own polls
-//      - This can be fixed by:
-//          - 1. Uncommenting '@login_required'
-//          - 2. Removing the quotation commenting around the 'question.creator != request.user' check
-"""
-
-#   // A01:2021 FLAW FIX step 1/2: Uncomment the '@login_required' decotator below //
-# @login_required(redirect_field_name="")
+@login_required(redirect_field_name="")
 def deleteView(request, pk):
     question = Question.objects.get(pk=pk)
 
-    #   // A01:2021 FLAW FIX step 2/2: Remove quotation commenting around the if-statement below //
+    # ! Flaw 1: A01:2021 - Broken Access Control
+    # ! Problem: Users can delete polls made by others by force browsing to a poll's deletion url (e.g. /1/delete)
+    # ! Fix: Uncomment the below code block that checks if question.creator != request.user
     """
     if question.creator != request.user:
         return render(
@@ -49,6 +40,7 @@ def deleteView(request, pk):
             },
         )
     """
+
     question.delete()
     return redirect("/")
 
@@ -73,9 +65,10 @@ def addView(request):
         for choice_text in choices:
             Choice.objects.create(question=question, choice_text=choice_text)
 
-        return redirect("polls:index")
+        return redirect("/")
 
 
+@login_required()
 def detailView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
     question = get_object_or_404(queryset, pk=pk)
@@ -84,14 +77,10 @@ def detailView(request, pk):
     return render(request, "polls/detail.html", context)
 
 
-"""
-// voteView() suffers from the CSRF vulnerability flaw
-//  - This can be fixed by removing the '@csrf_exempt' decorator
-//  - This restores Django's CSRF protection
-"""
-
-#   // CSRF FLAW FIX: Remove the '@csrf_exempt' decorator below //
-@csrf_exempt
+# ! Flaw 5: CSRF vulnerability
+# ! Problem: voteView() is missing CSRF protection
+# ! Fix: Remove the @csrf_exempt decorator
+@csrf_exempt  # Remove this to fix CSRF flaw
 @login_required(redirect_field_name="")
 def voteView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
@@ -136,6 +125,10 @@ def resultsView(request, pk):
 """
 
 
+# ! Flaw 3: A07:2021 - Identification and Authentication Failures
+# ! Problem: Users are allowed to register using a weak/common password
+# ! Fix: Uncomment the validate_password() function call
+# ! The checks are defined in config/settings.py with the AUTH_PASSWORD_VALIDATORS dict
 def registerView(request):
     if request.method == "GET":
         return render(request, "polls/register.html")
@@ -161,8 +154,7 @@ def registerView(request):
                 {"error_message": "Username already exists"},
             )
         try:
-            #   // A07:2021 FLAW FIX: Uncomment the function call below //
-            # validate_password(password=password)
+            # validate_password(password=password) # Uncomment this to fix A07:2021 flaw
             User.objects.create_user(username=username, password=password)
 
             return render(

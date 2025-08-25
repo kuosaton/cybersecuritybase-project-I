@@ -24,14 +24,7 @@ SECRET_KEY = "django-insecure-*2djmx7f@*(3ayf1mirb4&u0org&9n87&_g0kek$!_5o-%9h&8
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-"""
-# Remove quotation comment marks and remove above 'DEBUG = TRUE' to disallow directory listing and detailed error messages
-# This fixes A05_2021-Security_Misconfiguration
-# When DEBUG = TRUE, navigate to a nonexistent url such as /images to get a 'page not found' page that lists all directories
 
-DEBUG = False
-ALLOWED_HOSTS = ["127.0.0.1"]
-"""
 
 # Application definition
 
@@ -55,18 +48,17 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-"""
-// FLAW: A09:2021 "Security Logging and Monitoring Failures"
-//  - The app is missing security logging and monitoring
-//      - This can be fixed by removing the quotation commenting around the 'LOGGING' dictionary
-//  - Once active, the logging can be tested by:
-//      1. Triggering disallowed host event warning using e.g. "curl -H "Host: fake.com" http://localhost:8000/"
-//          - This produces a django.security.DisallowedHost error in the console and security.log file stored in src/
-//      2. Navigating to http://127.0.0.1:8000/login/, deleting the CSRF in browser dev tools, and submitting the login form
-//          - This produces a django.security.csrf warning in the console and security.log file stored in src/
-"""
 
-# // A09:2021 FLAW FIX: remove this quotation commenting around the 'LOGGING' dictionary //
+# ! Flaw 4: A09:2021 - Security Logging and Monitoring Failures
+# ! Problem: The app is missing security logging and monitoring
+# ! Fix: Remove the quote comments around the 'LOGGING' dictionary
+# ! Notes:
+# !     - Once active, the logging can be tested by:
+# !         1. Triggering disallowed host event warning using e.g. "curl -H "Host: fake.com" http://localhost:8000/"
+# !             - This produces a django.security.DisallowedHost error
+# !         2. Navigating to /login/, deleting the CSRF in browser dev tools, and submitting the login form
+# !             - This produces a django.security.csrf warning
+# !     - Security event logs are outputted in the server console and the security.log file
 """
 LOGGING = {
     "version": 1,
@@ -140,22 +132,22 @@ DATABASES = {
 # Password hashing
 # https://docs.djangoproject.com/en/5.2/ref/settings/#password-hashers
 
-"""
-// FLAW: A02:2021 - "Cryptographic Failures"
-// MD5, a deprecated hash function, is being used for password hashing
-// FIX: Remove MD5 from the password_hashers list and uncomment the more robust hashers below
-"""
 
-
-# // A02:2021 FLAW FIX: //
-# // Remove MD5PasswordHasher from the list and uncomment the hashers below //
+# ! Flaw 2: A02:2021 - Cryptographic Failures
+# ! Problem: Passwords are hashed using MD5, which is deprecated
+# ! Fix: In the PASSWORD_HASHERS list, remove MD5PasswordHasher and uncomment the other hashers
+# ! Notes:
+# !     - After changing hashers, logging in with previously created accounts won't work
+# !     - Delete db.sqlite3 and run 'python manage.py migrate' again, then register a new account
+# !     - The used hasher is marked in the beginning of a password hash in db.sqlite -> row 'password' of table 'auth_user'
+# !         - e.g. 'md5$...' or 'pbkdf2_sha256$...'
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
-    #"django.contrib.auth.hashers.PBKDF2PasswordHasher",
-    #"django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
-    #"django.contrib.auth.hashers.Argon2PasswordHasher",
-    #"django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
-    #"django.contrib.auth.hashers.ScryptPasswordHasher",
+    # "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    # "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    # "django.contrib.auth.hashers.Argon2PasswordHasher",
+    # "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    # "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
 # Password validation

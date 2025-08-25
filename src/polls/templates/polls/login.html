@@ -1,32 +1,32 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'polls/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
 
 <!DOCTYPE html>
 <html lang="en-US">
-   <head>
-      <meta charset="utf-8" />
-      <title>Login - Polls app</title>
-   </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>Login - Polls app</title>
+  </head>
 
-   <body>
-      <h1>Polls app</h1>
-      <hr />
+  <body>
+    <h1>Polls app</h1>
+    <hr />
 
-      <h2>Login</h2>
+    <h2>Login</h2>
 
-      <form method="post">
-         {% csrf_token %} {{ form.as_p }}
-         <button type="submit">Login</button>
-      </form>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
 
+    <br />
+    <b>No account?</b>
+    <a href="/register/">Register</a>
+
+    <footer>
       <br />
-      <b>No account?</b>
-      <a href="/register/">Register</a>
-
-      <footer>
-         <br />
-         <a href="{% url 'polls:index' %}">Return to home page</a>
-      </footer>
-   </body>
+      <a href="{% url 'polls:index' %}">Return to home page</a>
+    </footer>
+  </body>
 </html>
