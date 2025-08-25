@@ -22,13 +22,14 @@ def indexView(request):
     return render(request, "polls/index.html", context)
 
 
+# ! Flaw 1: A01:2021 - Broken Access Control
+# ! Problem: Users can delete polls made by others by force browsing to a poll's deletion url (e.g. /1/delete)
+# ! Fix: Uncomment the "if question.creator != request.user" checking code block
 @login_required(redirect_field_name="")
 def deleteView(request, pk):
     question = Question.objects.get(pk=pk)
 
-    # ! Flaw 1: A01:2021 - Broken Access Control
-    # ! Problem: Users can delete polls made by others by force browsing to a poll's deletion url (e.g. /1/delete)
-    # ! Fix: Uncomment the below code block that checks if question.creator != request.user
+    # ! Uncomment the below code to fix A01:2021 flaw
     """
     if question.creator != request.user:
         return render(
@@ -119,7 +120,7 @@ def resultsView(request, pk):
 # ! Flaw 3: A07:2021 - Identification and Authentication Failures
 # ! Problem: Users are allowed to register using a weak/common password
 # ! Fix: Uncomment the validate_password() function call
-# ! The checks are defined in config/settings.py with the AUTH_PASSWORD_VALIDATORS dict
+# ! Note: The checks are defined in config/settings.py with the AUTH_PASSWORD_VALIDATORS dict
 def registerView(request):
     if request.method == "GET":
         return render(request, "polls/register.html")
@@ -145,7 +146,7 @@ def registerView(request):
                 {"error_message": "Username already exists"},
             )
         try:
-            # validate_password(password=password) # Uncomment this to fix A07:2021 flaw
+            # validate_password(password=password) # ! Uncomment this to fix A07:2021 flaw
             User.objects.create_user(username=username, password=password)
 
             return render(
