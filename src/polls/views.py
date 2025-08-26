@@ -29,7 +29,7 @@ def indexView(request):
 def deleteView(request, pk):
     question = Question.objects.get(pk=pk)
 
-    # ! Uncomment the below code to fix A01:2021 flaw
+    # ! Uncomment the below code to fix flaw A01:2021
     """
     if question.creator != request.user:
         return render(
@@ -81,7 +81,7 @@ def detailView(request, pk):
 # ! Flaw 5: CSRF vulnerability
 # ! Problem: voteView() is missing CSRF protection
 # ! Fix: Remove the @csrf_exempt decorator
-@csrf_exempt  # Remove this to fix CSRF flaw
+@csrf_exempt  # ! Remove this to fix CSRF flaw
 @login_required(redirect_field_name="")
 def voteView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
@@ -146,7 +146,7 @@ def registerView(request):
                 {"error_message": "Username already exists"},
             )
         try:
-            # validate_password(password=password) # ! Uncomment this to fix A07:2021 flaw
+            # validate_password(password=password) # ! Uncomment this to fix flaw A07:2021
             User.objects.create_user(username=username, password=password)
 
             return render(
