@@ -49,16 +49,6 @@ MIDDLEWARE = [
 ]
 
 
-# ! Flaw 4: A09:2021 - Security Logging and Monitoring Failures
-# ! Problem: Security event loggers have been silenced
-# ! Fix: Switch "handlers" dict value to list ["security_file", "console"] instead of list ["null"]
-# ! Notes:
-# !     - Once active, the logging can be tested by:
-# !         1. Triggering disallowed host event warning by running e.g. "curl -H "Host: fake.com" http://localhost:8000/" on a 2nd shell while server is running
-# !             - This produces a django.security.DisallowedHost error
-# !         2. Navigating to /login/, deleting the CSRF in browser dev tools, and submitting the login form
-# !             - This produces a django.security.csrf warning
-# !     - Security event logs are outputted in the server console and the security.log file
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -86,8 +76,8 @@ LOGGING = {
     },
     "loggers": {
         "django.security": {
-            "handlers": ["null"],  # ! Remove this to fix flaw A09:2021, step 1/2
-            # "handlers": ["security_file", "console"],  # ! Uncomment this to fix flaw A09:2021, step 2/2
+            "handlers": ["null"],  # // Flaw 4 (A09:2021) fix 1/2: Remove this row //
+            # "handlers": ["security_file", "console"],  # // Flaw 4 (A09:2021) fix 2/2: Uncomment this row //
             "propagate": False,
         },
     },
@@ -130,14 +120,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#password-hashers
 
 
-# ! Flaw 2: A02:2021 - Cryptographic Failures
-# ! Problem: Passwords are hashed using MD5, which is deprecated
-# ! Fix: In the PASSWORD_HASHERS list, remove MD5PasswordHasher and uncomment the other hashers
-# ! Notes:
-# !     - After changing hashers, logging in with previously created accounts won't work
-# !     - Delete db.sqlite3 and run 'python manage.py migrate' again, then register a new account
-# !     - The used hasher is marked in the beginning of a password hash in db.sqlite -> row 'password' of table 'auth_user'
-# !         - e.g. 'md5$...' or 'pbkdf2_sha256$...'
+# // Flaw 2 (A02:2021) fix: Remove MD5PasswordHasher and uncomment the hashers below it //
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
     # "django.contrib.auth.hashers.PBKDF2PasswordHasher",
