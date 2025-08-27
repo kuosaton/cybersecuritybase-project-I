@@ -135,7 +135,7 @@ def registerView(request):
 
         try:
             # // Flaw 3 (A07:2021) fix: Uncomment validate_password() //
-            validate_password(password=password)
+            # validate_password(password=password)
             User.objects.create_user(username=username, password=password)
 
             return render(
