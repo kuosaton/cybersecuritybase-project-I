@@ -21,17 +21,8 @@ This a simple polls application with the following features:
 
 2. Clone this repository to a location of your choice.
 3. Navigate to the repository's `src` directory (`/cybersecuritybase-project-I/src`) in shell.
-4. Run `python manage.py migrate` to make necessary preparations. If `python`doesn't work, try running the commands using `python3` instead.
-```shell
-kuosaton:~/cybersecuritybase-project-I/src$ python manage.py makemigrations
-kuosaton:~/cybersecuritybase-project-I/src$ python manage.py
-```
-5. Start the server by running `python manage.py runserver`.
-```shell
-kuosaton:~/cybersecuritybase-project-I/src$ python manage.py runserver
-```
-6. Navigate to the server's address in your browser (`http://127.0.0.1:8000/` by default).
-```shell
-Starting development server at http://127.0.0.1:8000/
-```
-7. The app is ready to use!
+4. Run `python manage.py migrate` to make necessary preparations.
+   - If `python`doesn't work, try running the commands using `python3` instead.
+6. Start the server by running `python manage.py runserver`.
+7. Navigate to the server's address in your browser (`http://127.0.0.1:8000/` by default).
+8. The app is ready!
