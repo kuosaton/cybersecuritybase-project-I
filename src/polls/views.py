@@ -22,14 +22,11 @@ def indexView(request):
     return render(request, "polls/index.html", context)
 
 
-# ! Flaw 1: A01:2021 - Broken Access Control
-# ! Problem: Users can delete polls made by others by force browsing to a poll's deletion url (e.g. /1/delete)
-# ! Fix: Uncomment the "if question.creator != request.user" checking code block
 @login_required(redirect_field_name="")
 def deleteView(request, pk):
     question = Question.objects.get(pk=pk)
 
-    # ! Uncomment the below code to fix flaw A01:2021
+    # // Flaw 1 (A01:2021) fix: Uncomment the below code //
     """
     if question.creator != request.user:
         return render(
@@ -78,10 +75,8 @@ def detailView(request, pk):
     return render(request, "polls/detail.html", context)
 
 
-# ! Flaw 5: CSRF vulnerability
-# ! Problem: voteView() is missing CSRF protection
-# ! Fix: Remove the @csrf_exempt decorator
-@csrf_exempt  # ! Remove this to fix CSRF flaw
+# // Flaw 5 (CSRF) fix: Remove @csrf_exempt //
+@csrf_exempt
 @login_required(redirect_field_name="")
 def voteView(request, pk):
     queryset = Question.objects.filter(pub_date__lte=timezone.now())
@@ -115,10 +110,6 @@ def resultsView(request, pk):
     return render(request, "polls/results.html", context)
 
 
-# ! Flaw 3: A07:2021 - Identification and Authentication Failures
-# ! Problem: Users are allowed to register using a weak/common password
-# ! Fix: Uncomment the validate_password() function call
-# ! Note: The checks are defined in config/settings.py with the AUTH_PASSWORD_VALIDATORS dict
 def registerView(request):
     if request.method == "GET":
         return render(request, "polls/register.html")
@@ -144,7 +135,8 @@ def registerView(request):
                 {"error_message": "Username already exists"},
             )
         try:
-            # validate_password(password=password) # ! Uncomment this to fix flaw A07:2021
+            # // Flaw 3 (A07:2021) fix: Uncomment validate_password() //
+            # validate_password(password=password)
             User.objects.create_user(username=username, password=password)
 
             return render(
