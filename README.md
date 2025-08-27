@@ -21,7 +21,7 @@ This a simple polls application with the following features:
 
 2. Clone this repository to a location of your choice.
 3. Navigate to the repository's `src` directory (`/cybersecuritybase-project-I/src`) in shell.
-4. Run `python manage.py makemigrations` and `python manage.py migrate` to make necessary preparations. If `python`doesn't work, try running the commands using `python3` instead.
+4. Run `python manage.py migrate` to make necessary preparations. If `python`doesn't work, try running the commands using `python3` instead.
 ```shell
 kuosaton:~/cybersecuritybase-project-I/src$ python manage.py makemigrations
 kuosaton:~/cybersecuritybase-project-I/src$ python manage.py
