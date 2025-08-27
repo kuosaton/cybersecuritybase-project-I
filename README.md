@@ -4,16 +4,22 @@ Submission for Cyber Security Base project I: https://cybersecuritybase.mooc.fi/
 
 Starter website created following Django's "Writing your first Django app" tutorial: https://docs.djangoproject.com/en/5.2/intro/.
 
+## About
+
+This a simple polls application with the following features:
+- Register and login
+- Create and delete polls
+- View polls, vote on them, and see vote results
+
 ## Installation instructions
 
 1. Ensure you have Django and Python installed.
-   - The application has been tested using Python versions `3.10.12` & `3.13.17` and Django `5.2.5`.
+   - The application has been tested using Python versions `3.10.12` & `3.13.17` and Django version `5.2.5`.
    - Installation guide: https://cybersecuritybase.mooc.fi/installation-guide.
 
 2. Clone this repository to a location of your choice.
-3. Navigate to the repository's `src/` directory (`cybersecuritybase-project-I/src`) in shell.
-4. Run `python manage.py makemigrations` and `python manage.py migrate` to make necessary preparations.
-    - If `python`doesn't work, try running the commands using `python3`.
+3. Navigate to the repository's `src` directory (`/cybersecuritybase-project-I/src`) in shell.
+4. Run `python manage.py makemigrations` and `python manage.py migrate` to make necessary preparations. If `python`doesn't work, try running the commands using `python3` instead.
 ```shell
 kuosaton:~/cybersecuritybase-project-I/src$ python manage.py makemigrations
 kuosaton:~/cybersecuritybase-project-I/src$ python manage.py
@@ -22,7 +28,8 @@ kuosaton:~/cybersecuritybase-project-I/src$ python manage.py
 ```shell
 kuosaton:~/cybersecuritybase-project-I/src$ python manage.py runserver
 ```
-6. After starting the server, navigate to its address in your browser (`http://127.0.0.1:8000/` by default).
+6. Navigate to the server's address in your browser (`http://127.0.0.1:8000/` by default).
 ```shell
 Starting development server at http://127.0.0.1:8000/
 ```
+7. The app is ready to use!
