@@ -120,14 +120,10 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#password-hashers
 
 
-# // Flaw 2 (A02:2021) fix: Remove MD5PasswordHasher and uncomment the hashers below it //
+# // Flaw 2 (A02:2021) fix: Remove MD5 and uncomment PBKDF2 //
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
     # "django.contrib.auth.hashers.PBKDF2PasswordHasher",
-    # "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
-    # "django.contrib.auth.hashers.Argon2PasswordHasher",
-    # "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
-    # "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
 # Password validation
