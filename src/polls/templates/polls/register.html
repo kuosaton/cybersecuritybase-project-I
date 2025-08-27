@@ -4,40 +4,58 @@
 
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-    <title>Register - Polls app</title>
-  </head>
-  <body>
-    <h1>Polls app</h1>
-    <hr />
+   <head>
+      <meta charset="utf-8" />
+      <title>Register - Polls app</title>
+   </head>
+   <body>
+      <h1>Polls app</h1>
+      <hr />
 
-    <h2>Register</h2>
+      <h2>Register</h2>
 
-    {% if error_message %}
-    <p><strong>Error: {{ error_message }}</strong></p>
-    {% endif %} {% if success_message %}
-    <p><strong>{{ success_message }}</strong></p>
-    <a href="/login/">Continue to login</a>
-    {% else %}
+      {% if error_message %}
+      <p><strong>Error: {{ error_message }}</strong></p>
+      {% endif %} {% if validation_error_message %}
+      <strong>Error: Bad password.</strong>
+      <ul>
+         {% for error in validation_error_message %}
+         <li>
+            <b>{{error}}</b>
+         </li>
+         {% endfor %}
+      </ul>
+      {% endif %} {% if success_message %}
+      <p><strong>{{ success_message }}</strong></p>
+      <a href="/login/">Continue to login</a>
+      {% else %}
 
-    <form method="post">
-      {% csrf_token %}
-      <label>Username:</label>
-      <input type="text" name="username" required /><br />
+      <form method="post">
+         {% csrf_token %}
+         <label>Username:</label>
 
-      <label>Password:</label>
-      <input type="password" name="password" required /><br />
+         {% if previous_username_input %}
+         <input
+            type="text"
+            name="username"
+            value="{{ previous_username_input }}"
+            required
+         /><br />
+         {% else %}
+         <input type="text" name="username" required /><br />
+         {% endif %}
+         <label>Password:</label>
+         <input type="password" name="password" required /><br />
 
-      <label>Confirm password:</label>
-      <input type="password" name="password_confirmation" required /><br />
+         <label>Confirm password:</label>
+         <input type="password" name="password_confirmation" required /><br />
 
-      <input type="submit" value="Submit" />
-    </form>
-    {% endif %}
-    <footer>
-      <br />
-      <a href="{% url 'polls:index' %}">Return to home page</a>
-    </footer>
-  </body>
+         <input type="submit" value="Submit" />
+      </form>
+      {% endif %}
+      <footer>
+         <br />
+         <a href="{% url 'polls:index' %}">Return to home page</a>
+      </footer>
+   </body>
 </html>

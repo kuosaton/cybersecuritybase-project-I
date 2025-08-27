@@ -116,24 +116,26 @@ def registerView(request):
         password = request.POST.get("password")
         password_confirmation = request.POST.get("password_confirmation")
 
-        if password != password_confirmation:
-            return render(
-                request,
-                "polls/register.html",
-                {
-                    "error_message": "Passwords do not match",
-                },
-            )
-
         if User.objects.filter(username=username).exists():
             return render(
                 request,
                 "polls/register.html",
                 {"error_message": "Username already exists"},
             )
+
+        if password != password_confirmation:
+            return render(
+                request,
+                "polls/register.html",
+                {
+                    "error_message": "Passwords do not match",
+                    "previous_username_input": username,
+                },
+            )
+
         try:
             # // Flaw 3 (A07:2021) fix: Uncomment validate_password() //
-            # validate_password(password=password)
+            validate_password(password=password)
             User.objects.create_user(username=username, password=password)
 
             return render(
@@ -146,5 +148,5 @@ def registerView(request):
             return render(
                 request,
                 "polls/register.html",
-                {"error_message": e},
+                {"validation_error_message": e, "previous_username_input": username},
             )
