@@ -4,6 +4,8 @@ Submission for Cyber Security Base project I: https://cybersecuritybase.mooc.fi/
 
 Starter website created following Django's "Writing your first Django app" tutorial: https://docs.djangoproject.com/en/5.2/intro/.
 
+Project report with detailed flaw descriptions & flaw testing and fixing instructions: https://drive.proton.me/urls/24XF4JG9WM#k3eYJGvVAKi1
+
 ## About
 
 This a simple polls application with the following features:
