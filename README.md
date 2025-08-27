@@ -6,6 +6,8 @@ Starter website created following Django's "Writing your first Django app" tutor
 
 Project report with detailed flaw descriptions & flaw testing and fixing instructions: https://drive.proton.me/urls/24XF4JG9WM#k3eYJGvVAKi1
 
+Screenshots of flaws before and after applying fixes: [screenshots](screenshots)
+
 ## About
 
 This a simple polls application with the following features:
