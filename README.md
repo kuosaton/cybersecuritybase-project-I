@@ -18,7 +18,7 @@ This a simple polls application with the following features:
 ## Installation instructions
 
 1. Ensure you have Django and Python installed.
-   - The application has been tested using Python versions `3.10.12` & `3.13.17` and Django version `5.2.5`.
+   - The application has been tested using Python versions `3.10.12` & `3.13.7` and Django version `5.2.5`.
    - Installation guide: https://cybersecuritybase.mooc.fi/installation-guide.
 
 2. Clone this repository to a location of your choice.
